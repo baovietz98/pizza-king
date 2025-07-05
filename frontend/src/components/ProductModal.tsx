@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 import Image from "next/image";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -22,11 +23,14 @@ interface Props {
 }
 
 export default function ProductModal({ id, open, onClose, apiBase }: Props) {
+  const { addItem } = useCart();
   const [detail, setDetail] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedCrust, setSelectedCrust] = useState<string | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
     if (!open || !id) return;
@@ -49,6 +53,49 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
   }, [open, id, apiBase]);
 
   const totalPrice = selectedSize ? selectedSize.price * quantity : 0;
+
+  const handleAddToCart = async () => {
+    if (!detail || !selectedSize) return;
+    
+    const item = {
+      productId: detail._id, 
+      name: detail.name,
+      price: selectedSize.price,
+      size: selectedSize.name,
+      crust: selectedCrust || undefined,
+      quantity,
+      image: detail.image,
+    };
+    
+    console.log('Attempting to add item to cart:', item);
+    
+    try {
+      setIsAddingToCart(true);
+      setError(null);
+      await addItem(item);
+      console.log('Successfully added item to cart');
+      onClose();
+    } catch (err: any) {
+      console.error('Failed to add to cart:', err);
+      
+      // More specific error messages based on the error type
+      let errorMessage = 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.';
+      
+      if (err.message.includes('NetworkError')) {
+        errorMessage = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.';
+      } else if (err.message.includes('401') || err.message.includes('403')) {
+        errorMessage = 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.';
+      } else if (err.message.includes('404')) {
+        errorMessage = 'Sản phẩm không tồn tại hoặc đã bị xóa.';
+      } else if (err.message.includes('500')) {
+        errorMessage = 'Lỗi máy chủ. Vui lòng thử lại sau.';
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   if (!open) return null;
 
@@ -126,6 +173,13 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
                 </div>
               )}
 
+              {/* Error message */}
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+
               {/* Quantity & add to cart */}
               <div className="mt-6 flex flex-col md:flex-row items-center gap-4">
                 <div className="flex items-center border rounded-lg overflow-hidden">
@@ -146,24 +200,11 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
                 </div>
 
                 <button
-                  disabled={!selectedSize}
-                  onClick={() => {
-                    // add to cart
-                    const { addItem } = require("@/contexts/CartContext").useCart();
-                    addItem({
-                      id: detail._id,
-                      name: detail.name,
-                      size: selectedSize?.name,
-                      crust: selectedCrust ?? undefined,
-                      price: selectedSize?.price ?? 0,
-                      quantity,
-                      image: detail.image,
-                    });
-                    onClose();
-                  }}
+                  disabled={!selectedSize || isAddingToCart}
+                  onClick={handleAddToCart}
                   className="flex-1 bg-[#c8102e] disabled:bg-gray-300 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-[#a50d26] transition"
                 >
-                  Thêm vào giỏ hàng
+                  {isAddingToCart ? 'Đang thêm...' : 'Thêm vào giỏ hàng'}
                   <span>{new Intl.NumberFormat("vi-VN").format(totalPrice)} đ</span>
                 </button>
               </div>

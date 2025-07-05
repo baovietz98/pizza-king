@@ -7,15 +7,15 @@ const tabs: Tab[] = [
   { id: "search", label: "Tìm kiếm", icon: MagnifyingGlassIcon },
   { id: "favorite", label: "Bạn Sẽ Thích", icon: FireIcon },
   { id: "combo", label: "Combo", icon: GiftIcon },
-  { id: "bogo", label: "Mua 1 Tặng 1", iconSrc: "/icons/BOGO_Gray.webp" },
-  { id: "summer", label: "Menu Hè 2025", iconSrc: "/icons/Deals_Gray.webp" },
+  { id: "bogo", label: "Mua 1 Tặng 1", iconSrc: "/icons/BOGO_Gray.png" },
+  { id: "summer", label: "Menu Hè 2025", iconSrc: "/icons/Deals_Gray.png" },
   { id: "pizza", label: "Pizza", icon: CakeIcon },
-  { id: "chicken", label: "Ghiền Gà", iconSrc: "/icons/Chicken_Gray.webp" },
-  { id: "starter", label: "Món Khai Vị", iconSrc: "/icons/Starter_Gray.webp" },
-  { id: "mybox", label: "My Box", iconSrc: "/icons/Mybox_Gray.webp" },
-  { id: "drink", label: "Thức Uống", iconSrc: "/icons/Water_Gray.webp" },
-  { id: "spicy", label: "Cay", iconSrc: "/Spicy_icon.svg" },
-  { id: "veg", label: "Chay", iconSrc: "/Vegan_icon.svg" },
+  { id: "chicken", label: "Ghiền Gà", iconSrc: "/icons/Chicken_Gray.png" },
+  { id: "starter", label: "Món Khai Vị", iconSrc: "/icons/Starter_Gray.png" },
+  { id: "mybox", label: "My Box", iconSrc: "/icons/Mybox_Gray.png" },
+  { id: "drink", label: "Thức Uống", iconSrc: "/icons/Water_Gray.png" },
+  { id: "spicy", label: "Cay", iconSrc: "/icons/Spicy_icon.svg" },
+  { id: "veg", label: "Chay", iconSrc: "/icons/Vegan_icon.svg" },
 ];
 
 interface Props {
@@ -53,7 +53,7 @@ export default function CategoryTabs({ active, onChange }: Props) {
           <button
             key={t.id}
             className={clsx(
-              "group",
+              "group cursor-pointer",
               "flex flex-col items-center uppercase tracking-wide min-w-[72px] h-20 px-6 text-sm md:text-base transition-colors hover:text-red-600",
               isActive ? "text-red-600" : "text-gray-500"
             )}
@@ -62,7 +62,7 @@ export default function CategoryTabs({ active, onChange }: Props) {
             {t.icon ? (
               <t.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
             ) : (
-              <Image src={t.iconSrc!} alt={t.label} width={24} height={24} className="w-5 h-5 object-contain group-hover:scale-110 transition-transform" />
+              <Image src={t.iconSrc!} alt={t.label} width={24} height={24} unoptimized className="w-5 h-5 object-contain group-hover:scale-110 transition-transform" />
             )}
             <p className={clsx("mt-1 whitespace-nowrap", isActive ? "text-red-600 font-medium" : "text-gray-700 font-normal md:group-hover:font-medium")}>{t.label}</p>
           </button>

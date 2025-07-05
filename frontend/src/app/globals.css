@@ -1,27 +1,115 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #C8102E;
+  --text-color: #1F2937;
+  --gray-color: #637381;
+  --border-color: #E5E7EB;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* Disable dark background */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+  background: #FFFFFF;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+html {
+  background: #fff !important;
+}
+
+@layer components {
+  .style_containerHeader__KYx8A {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    height: 72px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(255 255 255);
+    padding: 1rem;
+    font-family: __Inter_7efcf0,__Inter_Fallback_7efcf0;
+  }
+
+  .style_textChannelOrder__dlQRK {
+    color: rgb(156 163 175);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .style_textAddress__Iq5mn {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: rgb(31 41 55);
+  }
+
+  .style_containerLogo__crdoX {
+    width: 120px;
+    height: 40px;
+    position: relative;
+    background-image: url('/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .style_containerRowIcons__BXZuT {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .style_containerIconCart__yS9wZ {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    transition: all 0.2s;
+  }
+
+  .style_containerIconCart__yS9wZ:hover {
+    background-color: rgb(243 244 246);
+  }
+
+  .style_containerIconMenu__1cPhr {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgb(229 231 235);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .style_containerIconMenu__1cPhr:hover {
+    background-color: rgb(243 244 246);
+  }
+
+  .style_containerDropDownMenu__18KYU {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    width: 14rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
 }

@@ -3,9 +3,9 @@ export default function Footer() {
     <footer className="bg-neutral-900 text-gray-300 mt-16">
       <div className="container mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
         <div>
-          <h2 className="font-semibold text-white mb-2">Pizza Hut Vietnam</h2>
+          <h2 className="font-semibold text-white mb-2">Pizza King Vietnam</h2>
           <p className="leading-relaxed text-xs">
-            Công ty TNHH Pizza Hut Việt Nam, 34A-34B Phan Đình Giót, P.2, Tân Bình,
+            Công ty TNHH Pizza King Việt Nam, 34A-34B Phan Đình Giót, P.2, Tân Bình,
             TP.HCM. MST: 0303902751 do Sở KHĐT TP.HCM cấp ngày 27/07/2005.
           </p>
         </div>
@@ -35,7 +35,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="bg-neutral-800 text-center text-xs py-4">
-        © 2025 Pizza Hut Vietnam. All rights reserved.
+        © 2025 Pizza King Vietnam. All rights reserved.
       </div>
     </footer>
   );

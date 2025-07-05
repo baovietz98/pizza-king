@@ -1,21 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const { requireAuth } = require('../middlewares/auth');
+const { requireAuth, guestAuth, guestSession } = require('../middlewares/auth');
 const cartController = require('../controllers/cartController');
 
-// Lấy giỏ hàng hiện tại
-router.get('/', requireAuth, cartController.getCart);
+// Middleware cho tất cả cart routes
+router.use(guestAuth, guestSession);
 
-// Thêm sản phẩm lẻ vào giỏ
-router.post('/add-product', requireAuth, cartController.addProductToCart);
+// Lấy giỏ hàng hiện tại (cả user và guest)
+router.get('/', cartController.getCart);
 
-// Thêm combo vào giỏ
-router.post('/add-combo', requireAuth, cartController.addComboToCart);
+// Thêm sản phẩm lẻ vào giỏ (cả user và guest)
+router.post('/add-product', cartController.addProductToCart);
 
-// Cập nhật số lượng, ghi chú
-router.put('/update-item/:itemId', requireAuth, cartController.updateCartItem);
+// Thêm combo vào giỏ (cả user và guest)
+router.post('/add-combo', cartController.addComboToCart);
 
-// Xóa item khỏi giỏ
-router.delete('/remove-item/:itemId', requireAuth, cartController.removeCartItem);
+// Cập nhật số lượng, ghi chú (cả user và guest)
+router.put('/update-item/:itemId', cartController.updateCartItem);
+
+// Xóa item khỏi giỏ (cả user và guest)
+router.delete('/remove-item/:itemId', cartController.removeCartItem);
+
+// Clear cart (cả user và guest)
+router.delete('/clear', cartController.clearCart);
+
+// Merge guest cart với user cart khi đăng nhập (chỉ user đã đăng nhập)
+router.post('/merge-guest-cart', requireAuth, cartController.mergeGuestCart);
 
 module.exports = router; 
