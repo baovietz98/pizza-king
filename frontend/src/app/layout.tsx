@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
+import { AuthProvider } from '@/contexts/AuthContext'
 import Footer from '@/components/Footer'
 import { CartProvider } from '@/contexts/CartContext'
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className={inter.className}>
+        <AuthProvider>
         <CartProvider>
         <Header />
         <main>
@@ -27,6 +29,7 @@ export default function RootLayout({
         </main>
         <Footer />
         </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   )

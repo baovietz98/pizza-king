@@ -17,10 +17,21 @@ async function getOrCreateCart(userId, sessionId) {
     // Guest user
     cart = await Cart.findOne({ sessionId: sessionId });
     if (!cart) {
-      // Tạo cart mới cho guest, không set field user
-      const cartData = { sessionId: sessionId, items: [] };
+      // Tạo cart mới cho guest, KHÔNG có field user
+      const cartData = { 
+        sessionId: sessionId, 
+        items: [],
+        voucher: '',
+        plasticRequest: false
+      };
       cart = new Cart(cartData);
       await cart.save();
+      
+      // Đảm bảo field user không tồn tại trong document
+      await Cart.updateOne(
+        { _id: cart._id },
+        { $unset: { user: "" } }
+      );
     }
   } else {
     throw new Error('Không xác định được user hoặc session');
@@ -97,7 +108,12 @@ async function mergeGuestCart(userId, sessionId) {
 exports.addProductToCart = async (req, res) => {
   try {
     const userId = getUserId(req);
-    const sessionId = req.guestSessionId;
+    let sessionId = req.guestSessionId;
+    
+    // Nếu là guest và chưa có session ID, tạo mới
+    if (!userId && !sessionId) {
+      sessionId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
     
     if (!userId && !sessionId) {
       return res.status(400).json({ message: 'Không xác định được user hoặc session' });
@@ -142,7 +158,7 @@ exports.addProductToCart = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     
@@ -156,7 +172,12 @@ exports.addProductToCart = async (req, res) => {
 exports.addComboToCart = async (req, res) => {
   try {
     const userId = getUserId(req);
-    const sessionId = req.guestSessionId;
+    let sessionId = req.guestSessionId;
+    
+    // Nếu là guest và chưa có session ID, tạo mới
+    if (!userId && !sessionId) {
+      sessionId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
     
     if (!userId && !sessionId) {
       return res.status(400).json({ message: 'Không xác định được user hoặc session' });
@@ -217,7 +238,7 @@ exports.addComboToCart = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     
@@ -233,8 +254,15 @@ exports.getCart = async (req, res) => {
     const userId = getUserId(req);
     const sessionId = req.guestSessionId;
     
+    // Nếu không có user và không có session ID, trả về giỏ hàng rỗng
     if (!userId && !sessionId) {
-      return res.status(400).json({ message: 'Không xác định được user hoặc session' });
+      return res.json({ 
+        cart: { 
+          items: [], 
+          voucher: '', 
+          plasticRequest: false 
+        } 
+      });
     }
     
     let cart = await getOrCreateCart(userId, sessionId);
@@ -252,7 +280,7 @@ exports.getCart = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     
@@ -286,7 +314,7 @@ exports.updateCartItem = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     
@@ -314,7 +342,7 @@ exports.removeCartItem = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     
@@ -366,7 +394,7 @@ exports.clearCart = async (req, res) => {
     
     // Trả về sessionId nếu là guest để frontend lưu
     const response = { cart };
-    if (!userId && sessionId) {
+    if (!userId) {
       response.sessionId = sessionId;
     }
     

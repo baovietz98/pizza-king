@@ -33,11 +33,12 @@ exports.guestAuth = (req, res, next) => {
 exports.guestSession = (req, res, next) => {
   // Lấy session ID từ header hoặc cookie
   const sessionId = req.header('X-Session-ID') || req.cookies?.sessionId;
+  
   if (sessionId) {
     req.guestSessionId = sessionId;
   } else {
-    // Tạo session ID mới cho guest
-    req.guestSessionId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Không tạo session ID mới - để null
+    req.guestSessionId = null;
   }
   next();
 };

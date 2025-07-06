@@ -11,14 +11,18 @@ function getSessionId(): string | null {
 // Save session ID to localStorage
 function saveSessionId(sessionId: string): void {
   if (typeof window === 'undefined') return;
+  console.log('💾 Lưu sessionId vào localStorage:', sessionId);
   localStorage.setItem(SESSION_ID_KEY, sessionId);
 }
 
 // Clear session ID (for logout)
 export function clearSessionId(): void {
   if (typeof window === 'undefined') return;
+  console.log('🧹 Xóa sessionId khỏi localStorage');
   localStorage.removeItem(SESSION_ID_KEY);
 }
+
+import { getToken } from "./authApi";
 
 // Helper to build headers with session ID
 function buildHeaders(extra: Record<string, string> = {}): HeadersInit {
@@ -30,6 +34,12 @@ function buildHeaders(extra: Record<string, string> = {}): HeadersInit {
   const sessionId = getSessionId();
   if (sessionId) {
     headers['X-Session-ID'] = sessionId;
+  }
+
+  // Attach auth token if available
+  const token = getToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   return headers;

@@ -66,8 +66,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const refreshCart = async () => {
     try {
       setLoading(true);
+      
+      // Kiểm tra xem có session ID hoặc user đã đăng nhập không
+      const sessionId = localStorage.getItem('cart_session_id');
+      const token = localStorage.getItem('auth_token');
+      
+      // Chỉ gọi API nếu có session ID hoặc user đã đăng nhập
+      if (!sessionId && !token) {
+        setItems([]);
+        setError(null);
+        return;
+      }
+      
       const response = await apiGetCart() as CartApiResponse;
-      console.log('Cart API Response:', response); // Debug log
       
       if (!response || !response.cart || !Array.isArray(response.cart.items)) {
         console.error('Invalid cart response format:', response);
@@ -89,12 +100,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         note: item.note,
       }));
       
-      console.log('Mapped Cart Items:', mappedItems); // Debug log
       setItems(mappedItems);
       setError(null);
     } catch (err) {
       console.error('Failed to fetch cart:', err);
       setError('Không thể tải giỏ hàng. Vui lòng thử lại.');
+      setItems([]);
     } finally {
       setLoading(false);
     }

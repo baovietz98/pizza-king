@@ -17,12 +17,20 @@ const cartItemSchema = new mongoose.Schema({
 });
 
 const cartSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // null nếu chưa đăng nhập
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // Chỉ set khi user đã đăng nhập
   sessionId: { type: String, required: false }, // Session ID cho guest cart
   items: [cartItemSchema],
   voucher: { type: String, default: '' },
   plasticRequest: { type: Boolean, default: false },
   updatedAt: { type: Date, default: Date.now }
+});
+
+// Middleware để đảm bảo không lưu user: null
+cartSchema.pre('save', function(next) {
+  if (this.user === null || this.user === undefined) {
+    delete this.user;
+  }
+  next();
 });
 
 // Unique index với sparse để đảm bảo mỗi user chỉ có 1 cart và mỗi session chỉ có 1 cart
