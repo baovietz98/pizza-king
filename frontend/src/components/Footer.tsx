@@ -1,41 +1,143 @@
+import Link from "next/link";
+import Image from "next/image";
+
 export default function Footer() {
   return (
-    <footer className="bg-neutral-900 text-gray-300 mt-16">
-      <div className="container mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-        <div>
-          <h2 className="font-semibold text-white mb-2">Pizza King Vietnam</h2>
-          <p className="leading-relaxed text-xs">
-            Công ty TNHH Pizza King Việt Nam, 34A-34B Phan Đình Giót, P.2, Tân Bình,
-            TP.HCM. MST: 0303902751 do Sở KHĐT TP.HCM cấp ngày 27/07/2005.
+    <footer className="w-full mt-16 text-gray-700">
+      {/* khu vực chính */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between bg-gray-50 rounded-lg shadow p-4 md:p-9 gap-8">
+        {/* Logo + thông tin CTY + social */}
+        <div className="space-y-4 max-w-xs">
+          <Link href="/">
+            <Image
+              src="/logo.svg"
+              alt="Pizza King"
+              width={156}
+              height={32}
+              className="w-[156px] object-contain"
+            />
+          </Link>
+
+          <p className="text-xs leading-relaxed">
+            Công ty TNHH Pizza King Việt Nam, 34A-34B Phan Đình Giót, P.2,
+            Tân Bình, TP.HCM. MST: 0303902751, cấp ngày 27/07/2005.
           </p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-white mb-2">Về chúng tôi</h2>
-          <ul className="space-y-1">
-            <li><a href="#" className="hover:text-white">Giới thiệu</a></li>
-            <li><a href="#" className="hover:text-white">Tin tức</a></li>
-            <li><a href="#" className="hover:text-white">Khuyến mãi</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-semibold text-white mb-2">Hỗ trợ</h2>
-          <ul className="space-y-1">
-            <li><a href="#" className="hover:text-white">Trung tâm trợ giúp</a></li>
-            <li><a href="#" className="hover:text-white">Chính sách giao hàng</a></li>
-            <li><a href="#" className="hover:text-white">Liên hệ</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-semibold text-white mb-2">Kết nối</h2>
+
           <div className="flex gap-3">
-            <a href="#" className="hover:text-white">Fb</a>
-            <a href="#" className="hover:text-white">Ig</a>
-            <a href="#" className="hover:text-white">Yt</a>
+            <Link
+              href="https://www.facebook.com/VietnamPizzaHut"
+              aria-label="Facebook"
+            >
+              <Image
+                src="/facebook-icon.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
+            </Link>
+            <Link
+              href="https://www.youtube.com/c/PizzaHutViệtNamPHV"
+              aria-label="YouTube"
+            >
+              <Image
+                src="/youtubeIcon.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
+            </Link>
+            <Link
+              href="mailto:customerservice@pizzaking.vn"
+              aria-label="Email"
+            >
+              <Image
+                src="/gmailIcon.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
+            </Link>
           </div>
         </div>
+
+        {/* Cột: Về chúng tôi */}
+        <div>
+          <h5 className="mb-4 text-base md:text-lg font-semibold">Về chúng tôi</h5>
+          <ul className="space-y-3 text-sm">
+            <li><Link href="#" className="cursor-pointer">Giới thiệu</Link></li>
+            <li><Link href="#" className="cursor-pointer">Tầm nhìn &amp; Sứ mệnh</Link></li>
+            <li><Link href="#" className="cursor-pointer">Giá trị cốt lõi</Link></li>
+            <li><Link href="#" className="cursor-pointer">An toàn thực phẩm</Link></li>
+            <li><Link href="#" className="cursor-pointer">LIMO</Link></li>
+            <li>
+              <Link
+                href="https://pizzaking.talent.vn/"
+                className="cursor-pointer"
+              >
+                Cơ hội nghề nghiệp
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Cột: Vị trí cửa hàng */}
+        <div>
+          <h5 className="mb-4 text-base md:text-lg font-semibold">Vị trí cửa hàng</h5>
+          <ul className="space-y-3 text-sm">
+            <li><Link href="#" className="cursor-pointer">Miền Bắc</Link></li>
+            <li><Link href="#" className="cursor-pointer">Miền Trung</Link></li>
+            <li><Link href="#" className="cursor-pointer">Miền Nam</Link></li>
+          </ul>
+        </div>
+
+        {/* Cột: Tải app + chứng nhận */}
+        <div>
+          <h5 className="mb-4 text-base md:text-lg font-semibold">Tải ứng dụng</h5>
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
+            <Link href="http://onelink.to/pizzakingvietnam">
+              <Image
+                src="/ch_play.svg"
+                alt="Google Play"
+                width={130}
+                height={49}
+                className="object-contain"
+              />
+            </Link>
+            <Link href="http://onelink.to/pizzakingvietnam">
+              <Image
+                src="/apple_store.svg"
+                alt="App Store"
+                width={130}
+                height={49}
+                className="object-contain"
+              />
+            </Link>
+            <Link href="http://online.gov.vn/Home/WebDetails/16305">
+              <Image
+                src="/certification.svg"
+                alt="Certification"
+                width={130}
+                height={49}
+                className="object-contain"
+              />
+            </Link>
+          </div>
+        </div>
+        </div>
       </div>
-      <div className="bg-neutral-800 text-center text-xs py-4">
-        © 2025 Pizza King Vietnam. All rights reserved.
+
+      {/* Bottom bar */}
+      <div className="max-w-7xl mx-auto px-4 flex flex-col-reverse md:flex-row justify-between items-center text-xs md:text-sm py-4">
+        <p className="text-nowrap mt-4 md:mt-0">Phiên bản 1.0.0</p>
+        <ul className="flex flex-wrap gap-4 md:gap-12">
+          <li><Link href="#" className="cursor-pointer">Hut Rewards</Link></li>
+          <li><Link href="#" className="cursor-pointer">Điều khoản và quyền lợi</Link></li>
+          <li className="text-primary font-medium">Liên hệ 1900&nbsp;1822</li>
+        </ul>
       </div>
     </footer>
   );

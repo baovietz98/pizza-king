@@ -5,11 +5,11 @@ import { CartItem } from "@/contexts/CartContext";
 
 interface Props {
   item: CartItem;
-  onIncrease: () => void;
+  onEdit: () => void;
   onRemove: () => void;
 }
 
-export default function CartItemCard({ item, onIncrease, onRemove }: Props) {
+export default function CartItemCard({ item, onEdit, onRemove }: Props) {
   const { image, name, size, crust, quantity, price } = item;
   const formatted = new Intl.NumberFormat("vi-VN").format(price * quantity);
 
@@ -35,7 +35,7 @@ export default function CartItemCard({ item, onIncrease, onRemove }: Props) {
           <div className="flex-1" />
 
           <div className="flex justify-between">
-            <button onClick={onIncrease} className="text-red-600 font-medium text-sm md:text-base text-gray-500">Chỉnh sửa</button>
+            <button onClick={onEdit} className="text-red-600 font-medium text-sm md:text-base">Chỉnh sửa</button>
             <span className="md:hidden font-semibold text-sm">{formatted}&nbsp;₫</span>
           </div>
         </div>

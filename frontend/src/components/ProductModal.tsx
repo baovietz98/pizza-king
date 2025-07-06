@@ -20,16 +20,22 @@ interface Props {
   open: boolean;
   onClose: () => void;
   apiBase: string;
+  cartItemId?: string;
+  initialSize?: string;
+  initialCrust?: string;
+  initialQuantity?: number;
+  initialNote?: string;
 }
 
-export default function ProductModal({ id, open, onClose, apiBase }: Props) {
-  const { addItem } = useCart();
+export default function ProductModal({ id, open, onClose, apiBase, cartItemId, initialSize, initialCrust, initialQuantity, initialNote }: Props) {
+  const { addItem, update } = useCart();
   const [detail, setDetail] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(initialQuantity ?? 1);
   const [selectedCrust, setSelectedCrust] = useState<string | null>(null);
+  const [note, setNote] = useState<string>(initialNote ?? "");
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
@@ -41,8 +47,17 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
         const data = await res.json();
         const detailData = data.data || data;
         setDetail(detailData);
-        setSelectedSize(detailData.sizes?.[0] ?? null);
-        setSelectedCrust(detailData.availableCrusts?.[0] ?? null);
+        if (initialSize) {
+            const matched = detailData.sizes?.find((s: SizeOption) => s.name === initialSize) || null;
+            setSelectedSize(matched ?? detailData.sizes?.[0] ?? null);
+          } else {
+            setSelectedSize(detailData.sizes?.[0] ?? null);
+          }
+        if (initialCrust) {
+            setSelectedCrust(initialCrust);
+          } else {
+            setSelectedCrust(detailData.availableCrusts?.[0] ?? null);
+          }
       } catch (e) {
         console.error(e);
       } finally {
@@ -54,7 +69,7 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
 
   const totalPrice = selectedSize ? selectedSize.price * quantity : 0;
 
-  const handleAddToCart = async () => {
+  const handleConfirm = async () => {
     if (!detail || !selectedSize) return;
     
     const item = {
@@ -64,6 +79,7 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
       size: selectedSize.name,
       crust: selectedCrust || undefined,
       quantity,
+      note,
       image: detail.image,
     };
     
@@ -72,7 +88,11 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
     try {
       setIsAddingToCart(true);
       setError(null);
-      await addItem(item);
+      if (cartItemId) {
+        await update(cartItemId, { size: item.size, crust: item.crust, quantity: item.quantity, price: item.price, note: item.note });
+      } else {
+        await addItem(item);
+      }
       console.log('Successfully added item to cart');
       onClose();
     } catch (err: any) {
@@ -152,7 +172,7 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
               )}
               {/* Crusts */}
               {detail.availableCrusts && detail.availableCrusts.length > 0 && (
-                <div className="mt-4">
+                <div className="mt-6 mb-4">
                   <p className="font-semibold mb-2">Đế bánh</p>
                   <div className="space-y-2">
                     {detail.availableCrusts.map((c) => (
@@ -161,18 +181,33 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
                         onClick={() => setSelectedCrust(c)}
                         className="w-full flex items-center justify-between my-2 cursor-pointer hover:bg-gray-100"
                       >
-                        <div className="flex items-center gap-2">
-                          <div className={`w-4 h-4 border-2 rounded-full ${selectedCrust===c ? 'border-[#c8102e]' : 'border-gray-300'}`}>
-                            {selectedCrust===c && <div className="w-full h-full rounded-full bg-[#c8102e]"></div>}
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-4 h-4 border-2 rounded-full ${selectedCrust===c ? 'border-[#c8102e]' : 'border-gray-300'}`}>
+                              {selectedCrust===c && <div className="w-full h-full rounded-full bg-[#c8102e]"></div>}
+                            </div>
+                            <span className={`ml-2 text-sm md:text-base font-medium ${selectedCrust===c ? 'text-gray-900' : 'text-gray-700'}`}>{c}</span>
                           </div>
-                          <span className={`ml-2 text-sm md:text-base font-medium ${selectedCrust===c ? 'text-gray-900' : 'text-gray-700'}`}>{c}</span>
                         </div>
                       </button>
                     ))}
                   </div>
+                  <div className="flex flex-col gap-1 mt-4 mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="font-semibold">Ghi chú (tùy chọn)</p>
+                      <p className="text-sm">{note.length}/72</p>
+                    </div>
+                    <input
+                      type="text"
+                      maxLength={72}
+                      placeholder="Chúng tôi sẽ cố gắng hết sức để phục vụ bạn nếu có thể!"
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                      className="py-3 px-4 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c8102e] text-sm placeholder:text-xs"
+                    />
+                  </div>
                 </div>
               )}
-
               {/* Error message */}
               {error && (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
@@ -181,7 +216,7 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
               )}
 
               {/* Quantity & add to cart */}
-              <div className="mt-6 flex flex-col md:flex-row items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div className="flex items-center border rounded-lg overflow-hidden">
                   <button
                     className="w-10 h-10 flex items-center justify-center text-[#c8102e] hover:bg-[#c8102e]/10 transition"
@@ -201,10 +236,10 @@ export default function ProductModal({ id, open, onClose, apiBase }: Props) {
 
                 <button
                   disabled={!selectedSize || isAddingToCart}
-                  onClick={handleAddToCart}
+                  onClick={handleConfirm}
                   className="flex-1 bg-[#c8102e] disabled:bg-gray-300 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-[#a50d26] transition"
                 >
-                  {isAddingToCart ? 'Đang thêm...' : 'Thêm vào giỏ hàng'}
+                  {isAddingToCart ? 'Đang xử lý...' : (cartItemId ? 'Cập nhật' : 'Thêm vào giỏ hàng')}
                   <span>{new Intl.NumberFormat("vi-VN").format(totalPrice)} đ</span>
                 </button>
               </div>

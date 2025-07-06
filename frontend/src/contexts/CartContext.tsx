@@ -46,6 +46,7 @@ export interface CartItem {
 interface CartContextValue {
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'id'>) => Promise<void>;
+  update: (id: string, payload: Partial<CartItem>) => Promise<void>;
   increase: (id: string) => Promise<void>;
   decrease: (id: string) => Promise<void>;
   remove: (id: string) => Promise<void>;
@@ -143,6 +144,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const update = async (id: string, payload: Partial<CartItem>) => {
+    try {
+      await apiUpdateItem(id, payload);
+      await refreshCart();
+    } catch (err) {
+      console.error('Failed to update cart item:', err);
+      throw new Error('Không thể cập nhật sản phẩm');
+    }
+  };
+
   const remove = async (id: string) => {
     try {
       await apiRemoveItem(id);
@@ -168,6 +179,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       value={{
         items,
         addItem,
+        update,
         increase,
         decrease,
         remove,
