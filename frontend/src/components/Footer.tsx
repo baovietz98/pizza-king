@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="space-y-4 max-w-xs">
           <Link href="/">
             <Image
-              src="/logo.svg"
+              src="/logopizzaking.png"
               alt="Pizza King"
               width={156}
               height={32}
@@ -24,10 +24,6 @@ export default function Footer() {
             />
           </Link>
 
-          <p className="text-xs leading-relaxed">
-            Công ty TNHH Pizza King Việt Nam, 34A-34B Phan Đình Giót, P.2,
-            Tân Bình, TP.HCM. MST: 0303902751, cấp ngày 27/07/2005.
-          </p>
 
           <div className="flex gap-3">
             <Link

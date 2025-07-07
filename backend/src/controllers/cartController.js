@@ -402,4 +402,69 @@ exports.clearCart = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
+};
+
+// Alias cho getCart
+exports.getCartItems = exports.getCart;
+
+// Alias cho updateCartItem
+exports.updateItemQuantity = exports.updateCartItem;
+
+// Alias cho removeCartItem
+exports.removeItem = exports.removeCartItem;
+
+// Apply voucher
+exports.applyVoucher = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const sessionId = req.guestSessionId;
+    
+    if (!userId && !sessionId) {
+      return res.status(400).json({ message: 'Không xác định được user hoặc session' });
+    }
+    
+    const { voucher } = req.body;
+    let cart = await getOrCreateCart(userId, sessionId);
+    
+    cart.voucher = voucher || '';
+    await cart.save();
+    
+    // Trả về sessionId nếu là guest để frontend lưu
+    const response = { cart };
+    if (!userId) {
+      response.sessionId = sessionId;
+    }
+    
+    res.json(response);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// Update plastic request
+exports.updatePlasticRequest = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const sessionId = req.guestSessionId;
+    
+    if (!userId && !sessionId) {
+      return res.status(400).json({ message: 'Không xác định được user hoặc session' });
+    }
+    
+    const { plasticRequest } = req.body;
+    let cart = await getOrCreateCart(userId, sessionId);
+    
+    cart.plasticRequest = plasticRequest || false;
+    await cart.save();
+    
+    // Trả về sessionId nếu là guest để frontend lưu
+    const response = { cart };
+    if (!userId) {
+      response.sessionId = sessionId;
+    }
+    
+    res.json(response);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
 }; 

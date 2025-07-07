@@ -22,6 +22,7 @@ const cartSchema = new mongoose.Schema({
   items: [cartItemSchema],
   voucher: { type: String, default: '' },
   plasticRequest: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }, // Thời gian tạo cart
   updatedAt: { type: Date, default: Date.now }
 });
 
@@ -30,6 +31,8 @@ cartSchema.pre('save', function(next) {
   if (this.user === null || this.user === undefined) {
     delete this.user;
   }
+  // Cập nhật updatedAt mỗi khi save
+  this.updatedAt = new Date();
   next();
 });
 
@@ -37,5 +40,15 @@ cartSchema.pre('save', function(next) {
 // sparse: true sẽ bỏ qua các document có giá trị null/undefined
 cartSchema.index({ user: 1 }, { unique: true, sparse: true });
 cartSchema.index({ sessionId: 1 }, { unique: true, sparse: true });
+
+// TTL index để tự động xóa guest carts sau 7 ngày (604800 giây)
+// Chỉ áp dụng cho guest carts (không có user field)
+cartSchema.index(
+  { createdAt: 1 }, 
+  { 
+    expireAfterSeconds: 604800, // 7 ngày
+    partialFilterExpression: { user: { $exists: false } } // Chỉ áp dụng cho guest carts
+  }
+);
 
 module.exports = mongoose.model('Cart', cartSchema); 

@@ -101,7 +101,6 @@ export default function Home() {
             title="Combo"
             products={combos.map((p) => ({ id: p._id, title: p.name, description: p.description, price: p.price, image: p.image, isNew: p.isNew }))}
           />
-          
         </>
       )}
       <ProductModal id={selectedId} open={!!selectedId} onClose={closeProduct} apiBase={API_BASE} />

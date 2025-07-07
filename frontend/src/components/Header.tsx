@@ -51,7 +51,6 @@ export default function Header() {
         </Link>
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/menu" className="hover:text-yellow-300">Menu</Link>
           <Link href="/deals" className="hover:text-yellow-300">Khuyến mãi</Link>
           <Link href="/stores" className="hover:text-yellow-300">Cửa hàng</Link>
         </nav>
