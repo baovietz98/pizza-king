@@ -71,12 +71,12 @@ export default function Header() {
           {/* Cart */}
           <Link href="/cart" className="relative flex items-center cursor-pointer hover:text-red-700 transition-colors" id="cart">
             <ShoppingCartIcon className="w-6 h-6 md:w-7 md:h-7 text-red-600" />
-            {cartCount > 0 && (
+              {cartCount > 0 && (
               <span className="absolute -top-1 -right-2 md:-right-3 min-w-[18px] md:min-w-[20px] h-4 md:h-5 px-1 flex items-center justify-center text-[10px] md:text-xs font-bold text-white bg-red-600 rounded-full">
                 {cartCount > 99 ? '99+' : cartCount}
               </span>
-            )}
-          </Link>
+              )}
+                      </Link>
           {/* User dropdown */}
           {loading ? (
             <div className="relative inline-flex items-center">
@@ -129,7 +129,7 @@ export default function Header() {
                   </div>
                 </div>
               )}
-            </div>
+              </div>
           )}
           
 

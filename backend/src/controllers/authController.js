@@ -156,6 +156,7 @@ exports.getMe = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: role
     });
   } catch (err) {

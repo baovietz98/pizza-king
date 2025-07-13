@@ -8,6 +8,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   role?: string;
 }
 
@@ -39,9 +40,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: me.id || me._id,
           name: me.name || me.fullName || me.email,
           email: me.email,
+          phone: me.phone,
           role: me.role,
         });
-      } catch (error) {
+      } catch {
         // invalid token - clear it
         apiLogout();
         setUser(null);

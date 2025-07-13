@@ -12,7 +12,7 @@ import {
 // Define API response types
 interface CartApiResponse {
   cart: {
-    items: CartItemApi[];
+  items: CartItemApi[];
     [key: string]: any;
   };
   sessionId?: string;
@@ -22,7 +22,7 @@ interface CartApiResponse {
 interface CartItemApi {
   _id: string;
   product: string; // ID của product
-  name: string;
+    name: string;
   size?: string;
   crust?: string;
   price: number;

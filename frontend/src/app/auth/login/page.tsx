@@ -50,7 +50,7 @@ export default function LoginPage() {
           router.push("/");
         }, 1000);
       } else {
-        router.push("/");
+      router.push("/");
       }
     } catch (err: any) {
       setError(err.message || "Đăng nhập thất bại");
