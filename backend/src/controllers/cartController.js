@@ -290,7 +290,7 @@ exports.getCart = async (req, res) => {
   }
 };
 
-// Cập nhật số lượng, ghi chú
+// Cập nhật số lượng, ghi chú, size, crust
 exports.updateCartItem = async (req, res) => {
   try {
     const userId = getUserId(req);
@@ -300,15 +300,19 @@ exports.updateCartItem = async (req, res) => {
       return res.status(400).json({ message: 'Không xác định được user hoặc session' });
     }
     
-    const { quantity, note } = req.body;
+    const { quantity, note, size, crust, price } = req.body;
     const { itemId } = req.params;
     
     let cart = await getOrCreateCart(userId, sessionId);
     const item = cart.items.id(itemId);
     if (!item) return res.status(404).json({ message: 'Không tìm thấy item' });
     
+    // Cập nhật các thuộc tính có trong request
     if (quantity !== undefined) item.quantity = quantity;
     if (note !== undefined) item.note = note;
+    if (size !== undefined) item.size = size;
+    if (crust !== undefined) item.crust = crust;
+    if (price !== undefined) item.price = price;
     
     await cart.save();
     
